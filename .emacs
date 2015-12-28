@@ -50,14 +50,18 @@
 ;; cedet
 (add-to-list 'load-path "~/.emacs.d/site-lisp/cedet-1.1/common")
 (load-file "~/.emacs.d/site-lisp/cedet-1.1/common/cedet.el")
+(setq semanticdb-default-save-directory "~/.emacs.d/semanticdb")
 (global-ede-mode 1)                      ; Enable the Project management system
 (semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
 (global-srecode-minor-mode 1)            ; Enable template insertion menu
+(global-set-key [(control tab)] 'semantic-ia-complete-symbol-menu) ;semantic的自动补全快捷键
+(setq semanticdb-project-roots
+(list (expand-file-name "/")));semantic检索范围
 
 ;; ecb
 (require 'ecb-setting)
 
-;; ecb
+;; yasnippet
 (require 'yasnippet-setting)
 
 ;; 窗口的一些设置，包括光标、窗口最大化等
@@ -71,4 +75,26 @@
  "chinese-wbim" "euc-cn" 'chinese-wbim-use-package
  "五笔" "汉字五笔输入法" "wb.txt")
 (require 'chinese-wbim)
-(setq default-input-method "chinese-wbim") 
+(setq default-input-method "chinese-wbim")
+
+;; company-mode
+;;(add-to-list 'load-path "/usr/local/emacs23/my_plus/company-mode"
+;;"~/.emacs.d/site-lisp/cedet-1.1/common") ;;拓展文件(插件)目录
+;;(load "~/.emacs.d/site-lisp/cedet-1.1/cedet" nil t)
+(require 'company-mode)
+(autoload 'company-mode "company" nil t)
+(setq company-idle-delay t)
+;; c/c++
+(add-to-list 'company-backends 'company-c-headers)
+;; python
+(require 'company-jedi)
+;; jedi
+(autoload 'jedi:setup "jedi" nil t)
+(setq jedi:setup-keys t);注意这句的位置要靠前
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)   ; optional
+(defun my/python-mode-hook ()
+  (add-to-list 'company-backends 'company-jedi))
+(add-hook 'python-mode-hook 'my/python-mode-hook)
+
+
