@@ -36,7 +36,7 @@
 (define-key global-map "\C-c`" 'ecb-restore-default-window-sizes)
 
 ;;; 启动时自动隐藏ecb窗口，自己加的～
-(run-with-idle-timer 1 nil 'ecb-hide-ecb-windows)
+(run-with-idle-timer 0.1 nil 'ecb-hide-ecb-windows)
 ;;=======================ECB2.40配置(end)==========================
 
 ;;=======================支持鼠标(start)==========================
@@ -55,5 +55,10 @@
   ;; If there is more than one, they won't work right.
  )
 ;;=======================支持鼠标(end)==========================
+
+(global-font-lock-mode 1) ;;就是能高亮了……
+(custom-set-variables
+ '(ecb-windows-width 0.2) ;;ecb默认占用宽度
+ )
 
 (provide 'ecb-setting)

@@ -1,5 +1,6 @@
-auto-save-list/
+*
 *~
-smex-items
-.python-environments/
-semanticdb/
+!help.org
+!elpa/
+!site-lisp/
+!.emacs

@@ -1,0 +1,154 @@
+* Code
+C-x RET r: revert-buffer-with-coding-system
+C-x RET f: set-buffer-file-coding-system
+
+* Org-mode
+** 字体
+*粗体*
+/斜体/
++删除线+
+_下划线_
+下标 : H_2 0
+上标 : E=mc^2
+等宽字 : =git= ~git~
+** 表格
+| Key             | Comnent                                            |
+|                 | <50>                                               |
+|-----------------+----------------------------------------------------|
+| C-c l(line)     | convert to table                                   |
+| C-c RET         | create Table                                       |
+| C-c C-c         | adjust table, not move cursor                      |
+| TAB             | move to next item, create new line if need         |
+| S-TAB           | move to previous item                              |
+| RET             | move to next line, create new line if need         |
+| M-LEFT/RIGHT    | move row                                           |
+| M-UP/DOWN       | move line                                          |
+| M-S-LEFT/RIGHIT | remove/insert row                                  |
+| M-S-UP/DOWN     | remove/insert line                                 |
+| C-c -           | add seperator                                      |
+| C-c RET         | add seperator, and jump to next line               |
+| C-c ^           | select sort                                        |
+
+* Git
+** 基本操作
+*M-x git status* 查看状态
+| key     | Command | Comment               |
+|---------+---------+-----------------------|
+| p/n     |         | up/down file          |
+| P/N     |         | up/down modified file |
+| </>     |         | head/tail table       |
+| v       |         | open file read-only   |
+| m/u/SPC |         | set/unset/toggle mark |
+| a       |         | add file              |
+| i       |         | add file to gitignore |
+| c       |         | commit                |
+** 提交
+| key     | Command | Comment |
+|---------+---------+---------|
+| C-c C-c |         | commit  |
+| C-c C-q |         | cancel  |
+** 版本历史
+| key     | Command                        | Comment                                             |
+|---------+--------------------------------+-----------------------------------------------------|
+|         | M-x git history                | view git history                                    |
+|         | M-x git log                    | view git log                                        |
+|         | M-x gitk                       | view with gitk (need install gitk)                  |
+|         | M-x branch                     | view branches                                       |
+| c/d/RET | *                              | create/delete/view branch                           |
+|         | M-x git-tag                    | create tag, which can checkout by: git-checkout TAG |
+|         | M-x git-checkout-to-new-branch | create new branch with TAG                          |
+
+* Gtags
+1. 生成代码索引文件
+  + 在代码目录下执行 *gtags* ,将生成索引，生成GPATH, GTAGS, GTRGS
+  + *gtags -v* 命令能看到哪些文件被索引了
+2. 在Emacs中打开一个源文件， *M-x gtags-mode* 启动gtags minor-mode
+3. 按键绑定
+| Key     | Commnet                    |
+|---------+----------------------------|
+| M-.     | ggtags-find-tag-dwim C-c v |
+| C-M-.   | ggtags-find-tag-regexp     |
+| M-]     | ggtags-find-reference      |
+| C-c M-/ | ggtags-view-search-history |
+| C-c M-g | ggtags-grep                |
+| C-c M-h | ggtags-view-tag-history    |
+| C-c M-j | ggtags-visit-project-root  |
+
+* Golang
+** golang代码跳转
+1.安装godef
+   #<<1.1>>
+   1) 设置GOPATH和GOBIN:
+    /etc/profile.d/go.sh
+    #+BEGIN_SRC sh
+    # set go environment
+    export GOPATH=/usr/local/go:$HOME/study/go
+    #export GOBIN=${GOPATH//://bin:}/bin
+    export PATH=$PATH:${GOPATH//://bin:}/bin
+    export GOBIN=
+    #+END_SRC
+   2) go get github.com/rogpeppe/godef
+   3) go install github.com/rogpeppe/godef
+2.通过elpa安装go-mode
+3.godef按键绑定:
+| Key     | Command            | Comment          |
+|---------+--------------------+------------------|
+| C-c C-d | M-x godef-describe | jump to describe |
+| C-c C-j | M-x godef-jump     | jump code        |
+| M-*     |                    | return code      | 
+** golang代码补全
+1.安装gocode
+   1)设置GOPATH和GOBIN，见[[1.1]]
+   2)go get github.com/nsf/gocode
+     go install github.com/nsf/gocode
+2.配置gocode，shell下输入:
+#+BEGIN_SRC sh
+gocode set propose-builtins true
+gocode set lib-path "/usr/lib/go/pkg/linux_amd64/:/usr/local/go/pkg/linux_amd64/:/home/aa/study/go/pkg/linux_amd64"
+gocode set autobuild true
+#+END_SRC
+3.可通过 *gocode set* 查看配置结果
+4.通过elpa安装auto-complete插件
+5.将github.com/nsf/gocode/emacs/go-autocomplete.el复制到emacs的$load-path目录下
+6.~/.emacs.d/site-lisp/gomode-setting.el:
+#+BEGIN_SRC emacs-lisp
+;; go语言的自动补全设置                                                                                                                                                                                           
+;; 需要预先安装gocode到$PATH中：github.com/nsf/gocode
+(add-to-list 'load-path "~/.emacs.d/site-lisp")                                                                                                                                                             
+;;(require 'go-complete)
+(require 'go-autocomplete)
+(require 'auto-complete-config)
+(ac-config-default)
+
+;; call 'go fmt' before closing a go file
+(add-hook 'before-save-hook #'gofmt-before-save)
+(add-hook 'completion-at-point-functions 'go-complete-at-point)
+
+(provide 'gomode-setting)
+#+END_SRC
+7..emacs添加:
+;; go-mode
+#+BEGIN_SRC emacs-lisp
+(require 'gomode-setting)
+#+END_SRC
+
+* Diary
+** 显示事件
+d:显示被选中的日期的所有事件
+s:显示所有事件，包括过期的，未到期的等等
+
+** 创建事件
+创建一个事件的样例：
+02/11/1989      Bill B. visits Princeton today      
+2pm Cognitive Studies Committee meeting      
+2:30-5:30 Liz at Lawrenceville      
+4:00pm Dentist appt      
+7:30pm Dinner at George's      
+8:00-10:00pm concert
+
+i d为当天日期添加一个事件
+i w为当天周创建一个周事件
+i m为当前月创建一个月事件
+i y为当前年创建一个年事件
+i a为当前日期创建一个周年纪念日
+i c创建一个循环的事件 
